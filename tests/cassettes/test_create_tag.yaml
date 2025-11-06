@@ -1,0 +1,32 @@
+interactions:
+- request:
+    body: '{"id":"new-tag-id"}'
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '19'
+      content-type:
+      - application/json
+      host:
+      - localhost:8000
+      user-agent:
+      - python-httpx/0.28.1
+    method: POST
+    uri: http://localhost:8000/tag
+  response:
+    body:
+      string: 'null'
+    headers:
+      content-length:
+      - '4'
+      content-type:
+      - application/json
+    status:
+      code: 201
+      message: Created
+version: 1

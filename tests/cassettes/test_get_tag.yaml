@@ -1,0 +1,28 @@
+interactions:
+- request:
+    body: ''
+    headers:
+      accept:
+      - '*/*'
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      host:
+      - localhost:8000
+      user-agent:
+      - python-httpx/0.28.1
+    method: GET
+    uri: http://localhost:8000/tag?id=new-tag-id
+  response:
+    body:
+      string: '{"id":"new-tag-id","key":"5aed2636-0f9e-45fe-bc08-28aeac2a7376","first_use":"2025-11-03T21:43:54.580067","last_use":"2025-11-03T21:43:54.580067"}'
+    headers:
+      content-length:
+      - '145'
+      content-type:
+      - application/json
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -16,7 +16,7 @@ class TagService:
     """Service class for tag operations."""
 
     @classmethod
-    async def handle_tag(cls, tag: TagRequest) -> None:
+    async def handle_tag_request(cls, tag: TagRequest) -> None:
         """Handle tag request.
         
         Args:

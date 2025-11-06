@@ -1,6 +1,6 @@
 """Tables related to database operations."""
 from datetime import datetime
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, ForeignKey
 from uuid import uuid4
 
 from src.database.database import Base
@@ -23,7 +23,7 @@ class History(Base):
     __tablename__ = "history"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    tag_id = Column(String, nullable=False, foreign_key="tag.id")
+    tag_id = Column(String, ForeignKey("tag.id"), nullable=False)
     timestamp = Column(String, nullable=False, default=datetime.now().isoformat())
 
 

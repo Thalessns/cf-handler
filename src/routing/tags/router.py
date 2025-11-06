@@ -9,13 +9,13 @@ prefix = "/tag"
 
 
 @tag_router.post(prefix+"/handle", status_code=status.HTTP_201_CREATED)
-async def handle_tag(tag: TagRequest) -> None:
+async def handle_tag_request(tag: TagRequest) -> None:
     """Endpoint to create or update a tag history.
 
     Args:
         tag (TagRequest): The tag data to create or retrieve.
     """
-    await tag_service.handle_tag(tag)
+    await tag_service.handle_tag_request(tag)
 
 
 @tag_router.post(prefix, status_code=status.HTTP_201_CREATED)
