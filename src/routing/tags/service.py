@@ -107,7 +107,7 @@ class TagService:
             last_use=timestamp
         )
         history_query = history_table.insert().values(
-            tag_id=data.id, timestamp=timestamp
+            tag_id=data.tag_id, timestamp=timestamp
         )
         await Database.execute_many([tag_query, history_query])
         
