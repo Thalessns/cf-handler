@@ -16,8 +16,8 @@ from src.routing.tags.exceptions import (
 async def test_handle_tag_request(client: AsyncClient):
     """Test handling a tag request."""
 
-    tag_data = {"id": "test-tag-id"}
-    response = await client.post("/tag/handle", json=tag_data)
+    tag_data = {"tag": "test-tag-id"}
+    response = await client.get("/tag/handle", params=tag_data)
     assert response.status_code == status.HTTP_201_CREATED
 
 
