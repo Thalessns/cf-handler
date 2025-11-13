@@ -5,13 +5,16 @@ from pydantic import BaseModel
 class TagRequest(BaseModel):
     """Schema for tag creation or update requests."""
 
-    id: str
+    tag_id: str
+    name: str
+    led_flag: bool = False
+    led_color: str | None = None
+    music_flag : bool = False
+    music_id: int | None = None
 
 
-class TagResponse(BaseModel):
+class TagResponse(TagRequest):
     """Schema for tag response."""
 
-    id: str
-    key: str
     first_use: str
     last_use: str | None

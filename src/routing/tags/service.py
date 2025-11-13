@@ -16,17 +16,16 @@ class TagService:
     """Service class for tag operations."""
 
     @classmethod
-    async def handle_tag_request(cls, tag: str) -> None:
+    async def handle_tag_request(cls, tag: TagRequest) -> None:
         """Handle tag request.
         
         Args:
             tag (str): The tag data.
         """
-        tag_req = TagRequest(id=tag)
-        if not await cls.tag_exists(tag_req.id):
-            await cls.create_tag(tag_req)
+        if not await cls.tag_exists(tag.tag_id):
+            await cls.create_tag(tag)
             return
-        await cls.update_tag_by_id(tag_req)
+        await cls.update_tag_by_id(tag)
 
     @classmethod
     async def create_tag(cls, new_tag: TagRequest) -> None:
@@ -41,15 +40,20 @@ class TagService:
         try:
             timestamp = TagUtils.get_timestamp()
             tag_query = tag_table.insert().values(
-                id=new_tag.id, 
+                tag_id=new_tag.tag_id,
+                name=new_tag.name,
+                led_flag=new_tag.led_flag,
+                led_color=new_tag.led_color,
+                music_flag=new_tag.music_flag,
+                music_id=new_tag.music_id,
                 first_use=timestamp,
                 last_use=timestamp
             )
             history_query = history_table.insert().values(
-                tag_id=new_tag.id, timestamp=timestamp)
+                tag_id=new_tag.tag_id, timestamp=timestamp)
             await Database.execute_many([tag_query, history_query])
         except IntegrityError:
-            raise TagAlreadyExistsException(id=new_tag.id)
+            raise TagAlreadyExistsException(id=new_tag.tag_id)
 
     @classmethod
     async def get_tag_by_id(cls, tag_id: str) -> dict:
@@ -64,7 +68,7 @@ class TagService:
         Returns:
             dict: The tag data.
         """
-        query = tag_table.select().where(tag_table.c.id == tag_id)
+        query = tag_table.select().where(tag_table.c.tag_id == tag_id)
         tag = await Database.fetch_one(query)
         if not tag:
             raise TagNotFoundException(id=tag_id)
@@ -97,9 +101,9 @@ class TagService:
         Raises:
             TagNotFoundException: If the tag with the specified ID does not exist.
         """
-        await cls.get_tag_by_id(data.id)  # Ensure tag exists
+        await cls.get_tag_by_id(data.tag_id)  # Ensure tag exists
         timestamp = TagUtils.get_timestamp()
-        tag_query = tag_table.update().where(tag_table.c.id == data.id).values(
+        tag_query = tag_table.update().where(tag_table.c.tag_id == data.tag_id).values(
             last_use=timestamp
         )
         history_query = history_table.insert().values(
@@ -117,7 +121,7 @@ class TagService:
         Returns:
             bool: True if the tag exists, False otherwise.
         """
-        query = tag_table.select().where(tag_table.c.id == tag_id)
+        query = tag_table.select().where(tag_table.c.tag_id == tag_id)
         tag = await Database.fetch_one(query)
         return tag is not None
 

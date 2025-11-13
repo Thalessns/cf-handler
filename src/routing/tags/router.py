@@ -1,4 +1,4 @@
-"""Roter for tag-related endpoints."""
+"""Router for tag-related endpoints."""
 from fastapi import APIRouter, status
 
 from src.routing.tags.schemas import TagRequest, TagResponse
@@ -9,13 +9,28 @@ prefix = "/tag"
 
 
 @tag_router.get(prefix+"/handle", status_code=status.HTTP_201_CREATED)
-async def handle_tag_request(tag: str) -> None:
+async def handle_tag_request(
+    tag_id: str,
+    name: str,
+    led_flag: bool = False,
+    led_color: str = None,
+    music_flag: bool = False,
+    music_id: int = None,
+) -> None:
     """Endpoint to create or update a tag history.
 
     Args:
         tag (TagRequest): The tag data to create or retrieve.
     """
-    await tag_service.handle_tag_request(tag)
+    tag_request = TagRequest(
+        tag_id=tag_id,
+        name=name,
+        led_flag=led_flag,
+        led_color=led_color,
+        music_flag=music_flag,
+        music_id=music_id,
+    )
+    await tag_service.handle_tag_request(tag_request)
 
 
 @tag_router.post(prefix, status_code=status.HTTP_201_CREATED)
