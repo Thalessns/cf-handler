@@ -8,8 +8,8 @@ tag_router = APIRouter()
 prefix = "/tag"
 
 
-@tag_router.post(prefix+"/handle", status_code=status.HTTP_201_CREATED)
-async def handle_tag_request(tag: TagRequest) -> None:
+@tag_router.get(prefix+"/handle", status_code=status.HTTP_201_CREATED)
+async def handle_tag_request(tag: str) -> None:
     """Endpoint to create or update a tag history.
 
     Args:

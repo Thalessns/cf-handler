@@ -16,16 +16,17 @@ class TagService:
     """Service class for tag operations."""
 
     @classmethod
-    async def handle_tag_request(cls, tag: TagRequest) -> None:
+    async def handle_tag_request(cls, tag: str) -> None:
         """Handle tag request.
         
         Args:
-            tag (TagRequest): The tag data.
+            tag (str): The tag data.
         """
-        if not await cls.tag_exists(tag.id):
-            await cls.create_tag(tag)
+        tag_req = TagRequest(id=tag)
+        if not await cls.tag_exists(tag_req.id):
+            await cls.create_tag(tag_req)
             return
-        await cls.update_tag_by_id(TagRequest(id=tag.id))
+        await cls.update_tag_by_id(tag_req)
 
     @classmethod
     async def create_tag(cls, new_tag: TagRequest) -> None:
