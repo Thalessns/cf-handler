@@ -7,7 +7,7 @@ from src.routing.preference.schemas import PreferenceRequest
 from src.routing.routine.schemas import Routine
 from src.routing.routine.service import routine_service
 from src.routing.routine.exceptions import InvalidValuesForRoutineException
-from src.routing.tags.schemas import TagRequest, TagResponse
+from src.routing.tags.schemas import TagRequest
 from src.routing.tags.service import tag_service
 
 tag_router = APIRouter()

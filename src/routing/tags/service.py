@@ -102,6 +102,8 @@ class TagService:
         await cls.get_tag_by_id(data.tag_id)  # Ensure tag exists
         timestamp = TagUtils.get_timestamp()
         tag_query = tag_table.update().where(tag_table.c.tag_id == data.tag_id).values(
+            preference_id=data.preference_id,
+            routine_id=data.routine_id,
             last_use=timestamp
         )
         history_query = history_table.insert().values(
