@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from src.database.database import Database
 from src.routing.tags.router import tag_router
 from src.routing.music.router import music_router
+from src.routing.routine.router import routine_router
 
 
 @asynccontextmanager
@@ -30,3 +31,4 @@ async def root() -> dict:
 
 app.include_router(tag_router)
 app.include_router(music_router)
+app.include_router(routine_router)

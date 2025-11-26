@@ -12,9 +12,7 @@ prefix = "/tag"
 async def handle_tag_request(
     tag_id: str,
     name: str,
-    led_flag: bool = False,
     led_color: str = None,
-    music_flag: bool = False,
     music_id: int = None,
 ) -> None:
     """Endpoint to create or update a tag history.
@@ -25,9 +23,7 @@ async def handle_tag_request(
     tag_request = TagRequest(
         tag_id=tag_id,
         name=name,
-        led_flag=led_flag,
         led_color=led_color,
-        music_flag=music_flag,
         music_id=music_id,
     )
     await tag_service.handle_tag_request(tag_request)

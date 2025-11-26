@@ -7,9 +7,7 @@ class TagRequest(BaseModel):
 
     tag_id: str
     name: str
-    led_flag: bool = False
     led_color: str | None = None
-    music_flag : bool = False
     music_id: int | None = None
 
 
