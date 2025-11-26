@@ -108,7 +108,20 @@ class TagService:
             tag_id=data.tag_id, timestamp=timestamp
         )
         await Database.execute_many([tag_query, history_query])
-        
+
+    @classmethod
+    async def delete_tag(cls, tag_id: str) -> None:
+        """Delete a tag by its ID.
+
+        Args:
+            tag_id (str): The ID of the tag to delete.
+
+        Raises:
+            TagNotFoundException: If the tag with the specified ID does not exist.
+        """
+        query = tag_table.delete().where(tag_table.c.tag_id == tag_id)
+        await Database.execute(query)
+
     @classmethod
     async def tag_exists(cls, tag_id: str) -> bool:
         """Check if a tag exists by its ID.

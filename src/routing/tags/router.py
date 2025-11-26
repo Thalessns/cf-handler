@@ -112,3 +112,13 @@ async def get_tag_history(id: str) -> list[dict]:
         list: The history of the tag.
     """
     return await tag_service.get_tag_history(id)
+
+
+@tag_router.delete(prefix, status_code=status.HTTP_204_NO_CONTENT)
+async def delete_tag(tag_id: str) -> None:
+    """Endpoint to delete a tag by its ID.
+
+    Args:
+        tag_id (str): The ID of the tag to delete.
+    """
+    await tag_service.delete_tag(tag_id)
