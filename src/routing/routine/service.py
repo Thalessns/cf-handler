@@ -1,25 +1,39 @@
 """Service related to routine operations."""
 
+from datetime import datetime
+
 from src.database.database import Database
 from src.database.tables import routine_table
-from src.routing.routine.schemas import RoutineRequest, RoutineResponse
-from src.routing.routine.exceptions import RoutineNotFoundException, TagRoutineAlreadyExistsException
+from src.routing.routine.schemas import Routine
+from src.routing.routine.exceptions import RoutineNotFoundException
+from src.routing.routine.utils import RoutineUtils
 
 
 class RoutineService:
     """Service class for routine operations."""
 
     @classmethod
-    async def create_routine(cls, routine: RoutineRequest) -> None:
+    async def handle_routine_request(cls, routine: Routine) -> None:
+        """Handle routine request.
+
+        Args:
+            routine (Routine): The routine data.
+        """
+        if not await cls.routine_exists(routine.routine_id):
+            await cls.create_routine(routine)
+            return
+        await cls.update_routine(routine)
+
+    @classmethod
+    async def create_routine(cls, routine: Routine) -> None:
         """Create a new routine in the database.
         
         Args:
-            routine (RoutineRequest): The routine data to be created.
+            routine (Routine): The routine data to be created.
         """
-        if await cls.tag_routine_exists(routine.tag_id):
-            raise TagRoutineAlreadyExistsException(tag_id=routine.tag_id)
+
         query = routine_table.insert().values(
-            tag_id=routine.tag_id,
+            routine_id=routine.routine_id,
             start_time=routine.start_time,
             end_time=routine.end_time,
             weekday=routine.weekday
@@ -27,35 +41,83 @@ class RoutineService:
         await Database.execute(query)
 
     @classmethod
-    async def get_routine_by_tag(cls, tag_id: str) -> RoutineResponse:
-        """Retrieve all routines associated with a specific tag ID.
+    async def get_routine(cls, routine_id: int) -> Routine:
+        """Retrieve a routine from the database by its ID.
 
         Args:
-            tag_id (str): The tag ID to filter routines.
+            routine_id (int): The ID of the routine to retrieve.
 
         Returns:
-            RoutineResponse: A routine associated with the tag ID.
+            Routine: The retrieved routine data.
 
         Raises:
-            RoutineNotFoundException: If no routines are found for the given tag ID.
+            RoutineNotFoundException: If the routine does not exist.
         """
-        query = routine_table.select().where(routine_table.c.tag_id == tag_id)
+        query = routine_table.select().where(routine_table.c.routine_id == routine_id)
         result = await Database.fetch_one(query)
-        if not result:
-            raise RoutineNotFoundException(routine_id=tag_id)
-        return RoutineResponse(**result)
+        if result is None:
+            raise RoutineNotFoundException(routine_id=routine_id)
+        return Routine(**result)
 
     @classmethod
-    async def tag_routine_exists(cls, tag_id: str) -> bool:
-        """Check if any routine exists for a given tag ID.
+    async def update_routine(cls, routine: Routine) -> None:
+        """Update an existing routine in the database.
 
         Args:
-            tag_id (str): The tag ID to check.
+            routine (Routine): The routine data to be updated.
+        """
+        query = (
+            routine_table.update()
+            .where(routine_table.c.routine_id == routine.routine_id)
+            .values(
+                start_time=routine.start_time,
+                end_time=routine.end_time,
+                weekday=routine.weekday
+            )
+        )
+        await Database.execute(query)
+
+    @classmethod
+    async def check_runnable_routine(cls, routine_id: int) -> bool:
+        """Check if a routine is runnable based on its ID.
+
+        Args:
+            routine_id (int): The ID of the routine to check.
 
         Returns:
-            bool: True if at least one routine exists for the tag ID, False otherwise.
+            bool: True if the routine is runnable, False otherwise.
         """
-        query = routine_table.select().where(routine_table.c.tag_id == tag_id)
+        routine = await cls.get_routine(routine_id)
+        today = RoutineUtils.get_weekday()
+        hour_now = datetime.now().hour
+        minute_now = datetime.now().minute
+        if routine.weekday != today:
+            return False
+        splitted_start_time = routine.start_time.strip().split(":")
+        splitted_end_time = routine.end_time.strip().split(":")
+        start_hour = int(splitted_start_time[0])
+        end_hour = int(splitted_end_time[0])
+        if (start_hour > hour_now) or (end_hour < hour_now):
+            return False
+        if hour_now == end_hour:
+            start_minute = int(splitted_start_time[1])
+            end_minute = int(splitted_end_time[1])
+            breakpoint()
+            if not (start_minute <= minute_now <= end_minute):
+                return False
+        return True
+
+    @classmethod
+    async def routine_exists(cls, routine_id: int) -> bool:
+        """Check if a routine exists in the database.
+
+        Args:
+            routine_id (int): The ID of the routine to check.
+
+        Returns:
+            bool: True if the routine exists, False otherwise.
+        """
+        query = routine_table.select().where(routine_table.c.routine_id == routine_id)
         result = await Database.fetch_one(query)
         return result is not None
 

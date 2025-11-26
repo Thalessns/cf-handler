@@ -42,8 +42,8 @@ class TagService:
             tag_query = tag_table.insert().values(
                 tag_id=new_tag.tag_id,
                 name=new_tag.name,
-                led_color=new_tag.led_color,
-                music_id=new_tag.music_id,
+                preference_id=new_tag.preference_id,
+                routine_id=new_tag.routine_id,
                 first_use=timestamp,
                 last_use=timestamp
             )
