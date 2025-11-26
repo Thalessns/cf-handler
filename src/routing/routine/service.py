@@ -97,13 +97,14 @@ class RoutineService:
         splitted_end_time = routine.end_time.strip().split(":")
         start_hour = int(splitted_start_time[0])
         end_hour = int(splitted_end_time[0])
+        print("Routine Weekday:", routine.weekday, "Today:", today)
+        print("Start hour:", start_hour, "End hour:", end_hour, "Current hour:", hour_now)
+        print("Start minute:", splitted_start_time[1], "End minute:", splitted_end_time[1], "Current minute:", minute_now)
         if (start_hour > hour_now) or (end_hour < hour_now):
             return False
         if hour_now == end_hour:
-            start_minute = int(splitted_start_time[1])
             end_minute = int(splitted_end_time[1])
-            breakpoint()
-            if not (start_minute <= minute_now <= end_minute):
+            if not (minute_now <= end_minute):
                 return False
         return True
 
