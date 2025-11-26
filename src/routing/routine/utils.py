@@ -1,6 +1,12 @@
 """Utils for routine operations."""
 
 from datetime import datetime
+from pydantic_settings import BaseSettings
+
+class RoutineConfig(BaseSettings):
+    """Class related to routine configs."""
+
+    HOURS_ADJUST: int = 3
 
 
 class RoutineUtils:
@@ -45,14 +51,17 @@ class RoutineUtils:
             ValueError: If the weekday string is not valid.
         """
         weekdays = {
-            "monday": 0,
-            "tuesday": 1,
-            "wednesday": 2,
-            "thursday": 3,
-            "friday": 4,
-            "saturday": 5,
-            "sunday": 6
+            "monday": 1,
+            "tuesday": 2,
+            "wednesday": 3,
+            "thursday": 4,
+            "friday": 5,
+            "saturday": 6,
+            "sunday": 7
         }
         date = datetime.now()
         day = date.strftime("%A").lower()
         return weekdays[day]
+
+
+routine_config = RoutineConfig()

@@ -6,7 +6,7 @@ from src.database.database import Database
 from src.database.tables import routine_table
 from src.routing.routine.schemas import Routine
 from src.routing.routine.exceptions import RoutineNotFoundException
-from src.routing.routine.utils import RoutineUtils
+from src.routing.routine.utils import RoutineUtils, routine_config
 
 
 class RoutineService:
@@ -19,8 +19,6 @@ class RoutineService:
         Args:
             routine (Routine): The routine data.
         """
-        routine.start_time = cls.adjust_time_format(routine.start_time)
-        routine.end_time = cls.adjust_time_format(routine.end_time)
         if not await cls.routine_exists(routine.routine_id):
             await cls.create_routine(routine)
             return
@@ -91,7 +89,10 @@ class RoutineService:
         """
         routine = await cls.get_routine(routine_id)
         today = RoutineUtils.get_weekday()
-        hour_now = datetime.now().hour
+        hour_now = datetime.now().hour - routine_config.HOURS_ADJUST
+        if hour_now < 0:
+            hour_now += 24
+            today -= 1
         minute_now = datetime.now().minute
         if routine.weekday != today:
             return False
@@ -120,24 +121,6 @@ class RoutineService:
         query = routine_table.select().where(routine_table.c.routine_id == routine_id)
         result = await Database.fetch_one(query)
         return result is not None
-
-    @classmethod
-    def adjust_time_format(cls, time: str) -> str:
-        """Adjust time format to +3 hours.
-        
-        Args:
-            time (str): The time string to adjust.
-
-        Returns:
-            str: The adjusted time string.
-        """
-        splitted_time = time.split(":")
-        hour = (int(splitted_time[0]) + 3)
-        if hour >= 24:
-            hour = 23
-        minute = splitted_time[1]
-        adjusted_time = f"{hour}:{minute}"
-        return adjusted_time
 
 
 routine_service = RoutineService()
