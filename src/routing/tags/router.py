@@ -20,7 +20,7 @@ async def handle_tag_request(
     name: str,
     led_color: int,
     music_id: int,
-    routine_id: int | None,
+    routine_id: int = None,
     end_time: str = None,
     start_time: str = None,
     weekday: int = None
@@ -32,7 +32,7 @@ async def handle_tag_request(
         name (str): The name of the tag.
         led_color (int): The LED color associated with the tag.
         music_id (int): The music ID associated with the tag.
-        routine_id (int | None): The routine ID.
+        routine_id (int): The routine ID.
         end_time (str, optional): The end time for the routine, if applicable.
         start_time (str, optional): The start time for the routine, if applicable.
         weekday (int, optional): The weekday for the routine, if applicable.
