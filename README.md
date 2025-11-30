@@ -57,7 +57,7 @@ O sistema espera uma resposta **JSON** com a seguinte estrutura para decidir o q
 ##  Estrutura dos Arquivos
 
   * **`main.py`**: Arquivo principal. Gerencia o loop de leitura, conexão Wi-Fi e orquestra os periféricos.
-  * **`pn532.py`**: Driver para comunicação com o módulo NFC PN532 via protocolo SPI.
+  * **`pn532.py`**: Driver para comunicação com o módulo NFC PN532 via protocolo SPI. https://github.com/Carglglz/NFC_PN532_SPI
   * **`conexao.py`**: Gerencia a conexão Wi-Fi (com reconexão automática) e requisições HTTP (`urequests`).
   * **`leds.py`**: Classe para controle básico dos LEDs (cores sólidas, indicação de erro/sucesso).
   * **`rotina.py`**: Implementa animações complexas de luz combinadas com sequências de tons no buzzer.
